@@ -1,0 +1,132 @@
+<!doctype html>
+
+<html lang="vi">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Quà Bất Ngờ</title>
+  <style>
+    :root{
+      --bg-rose:#ffd7e6;
+      --rose-soft:#ffb6ce;
+      --rose-deep:#ff84b6;
+      --accent:#ff6fa3;
+      --text:#ffffff;
+      --card:#fff0f6;
+      --shadow: 0 10px 25px rgba(255,105,180,0.15);
+      --glass: rgba(255,255,255,0.55);
+    }
+    html,body{height:100%;margin:0;font-family: 'Segoe UI', Roboto, "Helvetica Neue", Arial;}
+    body{
+      background: radial-gradient(circle at 10% 10%, rgba(255,255,255,0.15), transparent 8%),
+                  radial-gradient(circle at 90% 90%, rgba(255,255,255,0.08), transparent 8%),
+                  linear-gradient(180deg,var(--bg-rose), #ffd0e0 60%);
+      overflow:hidden;
+      display:flex;align-items:center;justify-content:center;flex-direction:column;
+    }
+    .hearts{position:fixed;inset:0;pointer-events:none;}
+    .heart{position:absolute;width:28px;height:28px;background:var(--rose-soft);transform:rotate(45deg);border-radius:4px;opacity:0.9;box-shadow:inset -4px -4px 8px rgba(255,255,255,0.25);}
+    .heart:before,.heart:after{content:'';position:absolute;background:var(--rose-soft);border-radius:50%;width:28px;height:28px;top:-14px;left:0}
+    .heart:after{left:14px;top:0}
+    @keyframes floatUp{0%{transform:translateY(0) rotate(45deg);opacity:0.9}100%{transform:translateY(-420px) rotate(45deg);opacity:0.08}}
+    .card{width:360px;max-width:92vw;padding:28px;border-radius:20px;background:linear-gradient(180deg,var(--card), rgba(255,240,250,0.8));box-shadow:var(--shadow);backdrop-filter: blur(6px);text-align:center;}
+    h1{margin:0 0 12px;font-size:20px;color:#b02a5b}
+    .gift-wrap{display:inline-block;cursor:pointer;transform-style:preserve-3d;transition:transform .25s ease;}
+    .gift-wrap:active{transform:translateY(6px) rotateX(6deg)}
+    .box{width:160px;height:140px;border-radius:16px;background:linear-gradient(180deg,var(--rose-deep),var(--accent));position:relative;box-shadow:0 14px 30px rgba(183,48,103,0.25);}
+    .ribbon{position:absolute;left:50%;transform:translateX(-50%);top:12px;width:28px;height:116px;background:linear-gradient(180deg,#fff3, #ffffff08);border-radius:8px;mix-blend-mode:overlay;}
+    .bow{position:absolute;left:50%;top:-6px;transform:translateX(-50%);width:120px;height:40px;pointer-events:none}
+    .bow .loop{position:absolute;width:48px;height:36px;background:linear-gradient(180deg,#fff4,#ffffff10);border-radius:50% 50% 10% 10%;box-shadow:inset -6px -6px 10px rgba(255,255,255,0.12);}
+    .bow .l{left:6px;transform:rotate(-30deg)}
+    .bow .r{right:6px;transform:rotate(30deg)}
+    .bow .k{position:absolute;left:50%;top:8px;transform:translateX(-50%);width:26px;height:26px;border-radius:6px;background:var(--rose-soft);box-shadow:0 6px 18px rgba(0,0,0,0.12)}
+    .surprise{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;padding:32px;background:linear-gradient(180deg, rgba(255,255,255,0.04), rgba(255,255,255,0.02));backdrop-filter: blur(6px);visibility:hidden;opacity:0;transition:opacity .35s ease;}
+    .surprise.show{visibility:visible;opacity:1}
+    .message-box{max-width:900px;padding:36px;border-radius:22px;background:linear-gradient(180deg, rgba(255,255,255,0.95), rgba(255,245,250,0.9));box-shadow:0 20px 60px rgba(220,60,120,0.12);border:1px solid rgba(255,200,230,0.6);display:flex;flex-direction:column;align-items:center}
+    .love-text{font-weight:800;font-size:clamp(20px,4.2vw,44px);color:var(--rose-soft);padding:12px 18px;border-radius:18px;background:linear-gradient(180deg, rgba(255,255,255,0.3), rgba(255,255,255,0.06));border:2px solid rgba(255,255,255,0.35);box-shadow:0 8px 30px rgba(255,100,170,0.08), 0 2px 0 rgba(255,255,255,0.2) inset;text-align:center;line-height:1.2}
+    .love-text .char{display:inline-block;transform-origin:center;animation:pop .9s cubic-bezier(.2,.9,.2,1) both;}
+    @keyframes pop{0%{transform:translateY(18px) scale(.6) rotate(-6deg);opacity:0}40%{transform:translateY(-6px) scale(1.06) rotate(2deg);opacity:1}100%{transform:translateY(0) scale(1) rotate(0)} }
+    .love-text{filter:drop-shadow(0 6px 18px rgba(255,120,170,0.18));}
+    .sub{margin-top:12px;font-size:14px;color:#a02360}
+    .close-btn{margin-top:18px;padding:10px 16px;border-radius:12px;background:linear-gradient(180deg,var(--rose-soft),#ffc0da);border:none;font-weight:700;cursor:pointer;box-shadow:0 8px 20px rgba(255,120,170,0.12)}
+    .hint{font-size:12px;color:#8e2a52;margin-top:12px}
+    @media (max-width:420px){.box{width:140px;height:120px}.card{padding:20px}}
+  </style>
+</head>
+<body>
+  <div class="hearts" aria-hidden="true"></div>
+  <div class="card" role="main">
+    <h1>Một món quà nho nhỏ cho người đặc biệt 💌</h1>
+    <div id="gift" class="gift-wrap" title="Nhấn để mở quà" role="button" aria-pressed="false">
+      <div class="box">
+        <div class="ribbon"></div>
+        <div class="bow">
+          <div class="loop l"></div>
+          <div class="loop r"></div>
+          <div class="k"></div>
+        </div>
+      </div>
+    </div>
+    <div class="hint">Nhấn vào hộp quà để xem bất ngờ ✨</div>
+  </div>
+  <div id="surprise" class="surprise" role="dialog" aria-hidden="true">
+    <div class="message-box">
+      <div id="love" class="love-text" aria-live="polite"></div>
+      <div class="sub">Mở quà là mở lòng nhé ❤️</div>
+      <div class="sub" style="font-size:16px;color:#ff6fa3;font-weight:bold;">Tri ân❤️Ami</div>
+      <button id="close" class="close-btn">Đóng</button>
+    </div>
+  </div>
+  <script>
+    const text = `Tớ thích cậu thwww cạu lứm áaaa cậu cóa thế hăm`;
+    const heartsEl = document.querySelector('.hearts');
+    for(let i=0;i<10;i++){
+      const h = document.createElement('div');
+      h.className='heart';
+      const left = Math.random()*100;
+      const size = 18+Math.random()*28;
+      h.style.left = left + 'vw';
+      h.style.bottom = (Math.random()*20 - 10) + 'vh';
+      h.style.width = size+'px'; h.style.height = size+'px';
+      h.style.opacity = 0.9 - Math.random()*0.6;
+      const dur = 8 + Math.random()*8;
+      h.style.animation = `floatUp ${dur}s linear ${-Math.random()*dur}s infinite`;
+      heartsEl.appendChild(h);
+    }
+    const gift = document.getElementById('gift');
+    const surprise = document.getElementById('surprise');
+    const love = document.getElementById('love');
+    const close = document.getElementById('close');
+    function typeReveal(container, str){
+      container.innerHTML='';
+      const chars = Array.from(str);
+      chars.forEach((ch,i)=>{
+        const span = document.createElement('span');
+        span.className='char';
+        span.style.animationDelay = (i*0.04) + 's';
+        span.textContent = ch;
+        container.appendChild(span);
+      });
+    }
+    gift.addEventListener('click', ()=>{
+      gift.setAttribute('aria-pressed','true');
+      gift.animate([
+        {transform:'scale(1) rotateX(0deg)'},
+        {transform:'scale(0.96) rotateX(6deg)'},
+        {transform:'scale(1) rotateX(0deg)'}
+      ],{duration:260,easing:'ease-out'});
+      surprise.classList.add('show');
+      surprise.setAttribute('aria-hidden','false');
+      typeReveal(love, text);
+    });
+    close.addEventListener('click', ()=>{
+      surprise.classList.remove('show');
+      surprise.setAttribute('aria-hidden','true');
+      gift.setAttribute('aria-pressed','false');
+    });
+    surprise.addEventListener('click', (e)=>{ if(e.target===surprise) close.click(); });
+    gift.addEventListener('keydown', (e)=>{ if(e.key==='Enter' || e.key===' ') { e.preventDefault(); gift.click(); } });
+    document.addEventListener('keydown', (e)=>{ if(e.key==='Escape' && surprise.classList.contains('show')) close.click(); });
+  </script>
+</body>
+</html>
